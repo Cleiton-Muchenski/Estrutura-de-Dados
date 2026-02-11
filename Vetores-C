@@ -31,8 +31,12 @@ do {
     scanf("%i", &opc);
     
     if (opc == 1) {
-        
+        for (i = 0; i < 8; i++) {
+        printf("\nInforme idade: [%i]", i);
+        scanf("%i", &vidades[i]);
+        }
     } else if (opc == 2) {
+        printf("\nExibindo.\n");
         for (i = 0; i < 8; i++){
         printf("[%i] = %i\n", i, vidades[i]);
         }
