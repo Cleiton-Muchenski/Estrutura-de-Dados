@@ -19,12 +19,12 @@ int i = 0;
 int opc = 0;
 
 do {
-    printf("\nCONTROLE DE IDADE");
+    printf("\nCONTROLE DE IDADE\n");
     printf("1. Carregar\n");
     printf("2. Exibir\n");
     printf("3. Limpar\n");
     printf("4. Maior\n");
-    printf("5. Qtde idades\n")
+    printf("5. Qtde idades\n");
     printf("6. Idade média\n");
     printf("9. Sair\n");
     printf("Digite: ");
@@ -34,7 +34,7 @@ do {
         
     } else if (opc == 2) {
         for (i = 0; i < 8; i++){
-        printf("%i\n", vidades[i])
+        printf("[%i] = %i\n", i, vidades[i]);
         }
     } else if (opc == 3) {
     
