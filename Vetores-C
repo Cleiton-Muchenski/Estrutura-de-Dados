@@ -28,6 +28,7 @@ do {
     printf("4. Maior\n");
     printf("5. Qtde idades\n");
     printf("6. Idade média\n");
+    printf("7. Limpar slot\n");
     printf("9. Sair\n");
     printf("Digite: ");
     scanf("%i", &opc);
@@ -62,8 +63,13 @@ do {
             contador = contador + 1;
             }
         }
+        printf("\nExistem %i slots ocupados,\n", contador);
     } else if (opc == 6) {
         
+    } else if (opc == 7) {
+    printf("\nInforme a posição a ser limpa: ");
+    scanf("%i", &i);
+    vidades[i-1] = 0;
     };
     
     
