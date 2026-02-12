@@ -19,7 +19,7 @@ int i = 0;
 int opc = 0;
 int maior = 0;
 int contador = 0;
-int soma = 0;
+float soma = 0;
 float media = 0;
 
 do {
