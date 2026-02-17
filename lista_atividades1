@@ -1,0 +1,88 @@
+----------------------------------------------------------------------------------------------------------------------------------------------------// Q1
+/******************************************************************************
+1. PRÁTICA - Crie uma aplicação console que seja responsável por calcular a área de 3 figuras geométricas.
+  1.1) Utilize um método para contrução do menu. 
+  1.2) Utilize métodos para realização das operações de cálculo das áreas das figuras geométricas.  
+*******************************************************************************/
+#include <stdio.h>
+
+#define PI 3.1416
+  // calculo area do triangulo
+  float calcularAreaTriangulo(float base, float altura) {
+    return (base * altura) / 2;
+  }
+  
+  // calculo area do quadrado
+  float calcularAreaQuadrado(float lado) {
+      return lado * lado;
+  }
+  
+  // calculo area do circulo
+  float calcularAreaCirculo(float raio) {
+      return PI * (raio * raio);
+  }
+  
+  // calculo do retangulo
+  float calcularAreaRetangulo(float base, float altura) {
+    return (base * altura);
+  }
+  
+  
+  // Menu
+  void mainMenu() {
+    
+    // variaveis
+    float a, b;
+    int opc = 0;
+    float ultimoResultado = 0;  
+      
+    
+    do {
+      printf("\n::::::::::MENU::::::::::\n");
+      printf("\n1. Area do triangulo");
+      printf("\n2. Area do quadrado");
+      printf("\n3. Area do circulo");
+      printf("\n4. Area do retangulo");
+      printf("\n9. Sair");
+      printf("\nDigite: ");
+      scanf("%d", &opc);
+      
+      if (opc == 1) {
+        printf("\ndigite a base: ");
+        scanf("%f", &a);
+        printf("\ndigite a altura: ");
+        scanf("%f", &b);
+        ultimoResultado = calcularAreaTriangulo(a, b);
+        printf("\n Area do triangulo é: %f", ultimoResultado); 
+      } else if (opc == 2) {
+        printf("\ndigite o lado: ");
+        scanf("%f", &a);
+        ultimoResultado = calcularAreaQuadrado(a);
+        printf("\n Area do quadrado é: %f", ultimoResultado); 
+      } else if (opc == 3) {
+        printf("\ndigite o raio: ");
+        scanf("%f", &a);
+        ultimoResultado = calcularAreaCirculo(a);
+        printf("\n Area do circulo é: %f", ultimoResultado); 
+      } else if (opc == 4) {
+        printf("\ndigite a base: ");
+        scanf("%f", &a);
+        printf("\ndigite a altura: ");
+        scanf("%f", &b);
+        ultimoResultado = calcularAreaRetangulo(a, b);
+        printf("\n Area do retangulo é: %f", ultimoResultado);
+      } 
+      
+      
+      
+    } while (opc != 9);
+  }
+  
+
+int main() {
+ 
+  mainMenu(); // iniciando o menu
+
+    return 0;
+}
+----------------------------------------------------------------------------------------------------------------------------------------------------// Q2
