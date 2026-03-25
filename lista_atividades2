@@ -1,0 +1,66 @@
+----------------------------------------------------------------------------------------- Q1
+#include <stdio.h>
+#include <stdlib.h>
+
+/* run this program using the console pauser or add your own getch, system("pause") or input loop */
+
+define TAM 10
+
+int ra[TAM] = {0};
+int ponteiro = 0;
+
+void adicionar(int ra[], int numero){
+	
+	
+	
+}
+
+void remover(int ra[], int numero){
+	
+}
+
+void pesquisar(int ra[], int numero){
+	
+}
+
+void exibir(int ra[]){
+	
+}
+
+void contar(int ra[]){
+	
+}
+
+void menu() {
+	int opc = 0;
+	
+	do {
+	printf("\n----------MENU-RA----------\n");
+	printf("1. adicionar\n");
+	printf("2. remover\n");
+	printf("3. pesquisar\n");
+	printf("4. listar\n");
+	printf("4. contar\n");
+	printf("----------------------------\n");
+	printf("DIGITE: \n");
+	scanf("%i", &opc);
+	
+	
+	if (opc == 1) {
+		
+	} else if (opc == 2) {
+		
+	} else if (opc == 3) {
+		
+	} else if (opc == 4) {
+		
+	} else if (opc == 5) {
+		
+	}
+	
+	} while (opc != 9);
+}
+
+int main(int argc, char *argv[]) {
+	menu();
+}
