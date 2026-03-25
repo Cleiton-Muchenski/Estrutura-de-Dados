@@ -121,6 +121,94 @@ int main(int argc, char *argv[]) {
 #include <stdio.h>
 #include <stdlib.h>
 
+#define TAM 10
+
+float alturas[TAM] = {0};
+
+void adicionar(int pos, float valor) {
+    if (pos < 0 || pos >= TAM) {
+        printf("Posição inválida!\n");
+    } else {
+        alturas[pos] = valor;
+        printf("Altura %.2f adicionada na posição %i\n", valor, pos);
+    }
+}
+
+void ler(int pos) {
+    if (pos < 0 || pos >= TAM) {
+        printf("Posição inválida!\n");
+    } else {
+        printf("Altura na posição %i: %.2f\n", pos, alturas[pos]);
+    }
+}
+
+void somar() {
+    float soma = 0;
+    for (int i = 0; i < TAM; i++) {
+        soma += alturas[i];
+    }
+    printf("Soma de todas as alturas: %.2f\n", soma);
+}
+
+void contar() {
+    int cont = 0;
+    for (int i = 0; i < TAM; i++) {
+        if (alturas[i] > 0) cont++;
+    }
+    printf("Quantidade de alturas maiores que zero: %i\n", cont);
+}
+
+void contarVazias() {
+    int cont = 0;
+    for (int i = 0; i < TAM; i++) {
+        if (alturas[i] == 0) cont++;
+    }
+    printf("Quantidade de posições vazias: %i\n", cont);
+}
+
+int main() {
+    int opc, pos;
+    float valor;
+
+    do {
+        printf("\n******** MENU ********\n");
+        printf("1 - Adicionar\n");
+        printf("2 - Ler\n");
+        printf("3 - Somar\n");
+        printf("4 - Contar\n");
+        printf("5 - Contar posições vazias\n");
+        printf("9 - Sair\n");
+        printf("Escolha: ");
+        scanf("%i", &opc);
+
+        if (opc == 1) { // Adicionar
+            printf("Posição: ");
+            scanf("%i", &pos);
+            printf("Valor: ");
+            scanf("%f", &valor);
+            adicionar(pos, valor);
+        } else if (opc == 2) { // Ler
+            printf("Posição: ");
+            scanf("%i", &pos);
+            ler(pos);
+        } else if (opc == 3) { // Somar
+            somar();
+        } else if (opc == 4) { // Contar valores > 0
+            contar();
+        } else if (opc == 5) { // Contar posições vazias
+            contarVazias();
+        } else if (opc != 9) {
+            printf("Opção inválida!\n");
+        }
+
+    } while (opc != 9); // Sair
+
+    return 0;
+}
+----------------------------------------------------------------------------------------- Q3
+#include <stdio.h>
+#include <stdlib.h>
+
 #define TAM 100
 
 int idades[TAM] = {0};
