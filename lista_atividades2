@@ -118,3 +118,169 @@ int main(int argc, char *argv[]) {
 	menu();
 }
 ----------------------------------------------------------------------------------------- Q2
+#include <stdio.h>
+#include <stdlib.h>
+
+#define TAM 100
+
+int idades[TAM] = {0};
+
+void adicionar(int idade){
+    for (int i = 0; i < TAM; i++) {
+        if (idades[i] == 0) {
+            idades[i] = idade;
+            printf("Idade %i adicionada na posição %i\n", idade, i);
+            return;
+        }
+    }
+    printf("Lista cheia!\n");
+}
+
+void adicionarPos(int idade, int pos){
+    if (pos < 0 || pos >= TAM) {
+        printf("Posição inválida!\n");
+    } else if (idades[pos] != 0) {
+        printf("Posição ocupada!\n");
+    } else {
+        idades[pos] = idade;
+        printf("Idade %i adicionada na posição %i\n", idade, pos);
+    }
+}
+
+void imprimirPos(int pos){
+    if (pos < 0 || pos >= TAM) {
+        printf("Posição inválida!\n");
+    } else if (idades[pos] == 0) {
+        printf("Nenhuma idade na posição %i\n", pos);
+    } else {
+        printf("Idade na posição %i: %i\n", pos, idades[pos]);
+    }
+}
+
+void imprimirTodas(){
+    int vazio = 1;
+    for (int i = 0; i < TAM; i++) {
+        if (idades[i] != 0) {
+            printf("[%i] = %i\n", i, idades[i]);
+            vazio = 0;
+        }
+    }
+    if (vazio == 1) printf("Lista vazia!\n");
+}
+
+void removerPos(int pos){
+    if (pos < 0 || pos >= TAM) {
+        printf("Posição inválida!\n");
+    } else if (idades[pos] == 0) {
+        printf("Nada para remover!\n");
+    } else {
+        printf("Idade %i removida da posição %i\n", idades[pos], pos);
+        idades[pos] = 0;
+    }
+}
+
+void removerTodas(){
+    for (int i = 0; i < TAM; i++) {
+        idades[i] = 0;
+    }
+    printf("Todas as idades removidas!\n");
+}
+
+void contar(){
+    int cont = 0;
+    for (int i = 0; i < TAM; i++) {
+        if (idades[i] != 0) {
+            cont++;
+        }
+    }
+    printf("Total de idades: %i\n", cont);
+}
+
+void somar(){
+    int soma = 0;
+    for (int i = 0; i < TAM; i++) {
+        soma += idades[i];
+    }
+    printf("Soma das idades: %i\n", soma);
+}
+
+void somarImpares(){
+    int soma = 0;
+    for (int i = 0; i < TAM; i++) {
+        if (idades[i] % 2 != 0) {
+            soma += idades[i];
+        }
+    }
+    printf("Soma das idades ímpares: %i\n", soma);
+}
+
+void imprimirPares(){
+    int achou = 0;
+    for (int i = 0; i < TAM; i++) {
+        if (idades[i] != 0 && idades[i] % 2 == 0) {
+            printf("%i ", idades[i]);
+            achou = 1;
+        }
+    }
+    if (achou == 0) printf("Nenhuma idade par encontrada.");
+    printf("\n");
+}
+
+void menu(){
+    int opc, idade, pos;
+
+    do {
+        printf("\n******** MENU - IDADES ********\n");
+        printf("1 - Adicionar\n");
+        printf("2 - Adicionar na posição X\n");
+        printf("3 - Imprimir posição X\n");
+        printf("4 - Imprimir todas\n");
+        printf("5 - Remover posição X\n");
+        printf("6 - Remover todas\n");
+        printf("7 - Contar\n");
+        printf("8 - Somar idades\n");
+        printf("9 - Somar ímpares\n");
+        printf("10 - Imprimir pares\n");
+        printf("99 - Sair\n");
+        printf("Escolha: ");
+        scanf("%i", &opc);
+
+        if (opc == 1) { // Menu opção 1 - Adicionar
+            printf("Idade: ");
+            scanf("%i", &idade);
+            adicionar(idade);
+        } else if (opc == 2) { // Menu opção 2 - Adicionar na posição X
+            printf("Idade: ");
+            scanf("%i", &idade);
+            printf("Posição: ");
+            scanf("%i", &pos);
+            adicionarPos(idade, pos);
+        } else if (opc == 3) { // Menu opção 3 - Imprimir posição X
+            printf("Posição: ");
+            scanf("%i", &pos);
+            imprimirPos(pos);
+        } else if (opc == 4) { // Menu opção 4 - Imprimir todas
+            imprimirTodas();
+        } else if (opc == 5) { // Menu opção 5 - Remover posição X
+            printf("Posição: ");
+            scanf("%i", &pos);
+            removerPos(pos);
+        } else if (opc == 6) { // Menu opção 6 - Remover todas
+            removerTodas();
+        } else if (opc == 7) { // Menu opção 7 - Contar
+            contar();
+        } else if (opc == 8) { // Menu opção 8 - Somar idades
+            somar();
+        } else if (opc == 9) { // Menu opção 9 - Somar ímpares
+            somarImpares();
+        } else if (opc == 10) { // Menu opção 10 - Imprimir pares
+            imprimirPares();
+        }
+
+    } while (opc != 99); // Menu opção 99 - Sair
+}
+
+int main(){
+    menu();
+    return 0;
+}
