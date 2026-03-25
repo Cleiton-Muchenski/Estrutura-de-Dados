@@ -2,61 +2,114 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* run this program using the console pauser or add your own getch, system("pause") or input loop */
-
-define TAM 10
+#define TAM 10
 
 int ra[TAM] = {0};
 int ponteiro = 0;
 
 void adicionar(int ra[], int numero){
-	
-	
-	
+    if (ponteiro >= TAM) {
+        printf("Numero limite de RA's alcançados!\n");
+    } else {
+        ra[ponteiro] = numero;
+        printf("%i foi adicionado!\n", ra[ponteiro]);
+        ponteiro++;
+    }
 }
 
-void remover(int ra[], int numero){
-	
+void remover(int ra[]){
+    if (ponteiro <= 0) {
+        printf("Pilha vazia!\n");
+    } else {
+        ponteiro--;
+        printf("RA %i removido!\n", ra[ponteiro]);
+        ra[ponteiro] = 0;
+    }    
 }
 
 void pesquisar(int ra[], int numero){
-	
+    int encontrado = 0;
+
+    for (int i = 0; i < ponteiro; i++) {
+        if (ra[i] == numero) {
+            printf("RA %i encontrado na posição %i\n", numero, i);
+            encontrado = 1;
+            break; 
+        }    
+    }
+
+    if (encontrado == 0) {
+        printf("RA %i não encontrado\n", numero);
+    }
 }
 
 void exibir(int ra[]){
-	
+    if (ponteiro == 0) {
+        printf("Lista vazia!\n");
+    } else {
+        printf("Lista de RA's:\n");
+        for (int i = 0; i < ponteiro; i++) {
+            printf("[%i] = %i\n", i, ra[i]);
+        }
+    }
 }
 
 void contar(int ra[]){
-	
+    int contador = 0;
+
+    for (int i = 0; i < TAM; i++) {
+        if (ra[i] != 0) {
+            contador++;
+        }
+    }
+
+    printf("Quantidade de RA's: %i\n", contador);
 }
 
 void menu() {
-	int opc = 0;
-	
-	do {
-	printf("\n----------MENU-RA----------\n");
-	printf("1. adicionar\n");
-	printf("2. remover\n");
-	printf("3. pesquisar\n");
-	printf("4. listar\n");
-	printf("4. contar\n");
-	printf("----------------------------\n");
-	printf("DIGITE: \n");
-	scanf("%i", &opc);
-	
-	
-	if (opc == 1) {
-		
-	} else if (opc == 2) {
-		
-	} else if (opc == 3) {
-		
-	} else if (opc == 4) {
-		
-	} else if (opc == 5) {
-		
-	}
+    int opc = 0;
+    int numero;
+
+    do {
+        printf("\n----------MENU-RA----------\n");
+        printf("1. adicionar\n");
+        printf("2. remover\n");
+        printf("3. pesquisar\n");
+        printf("4. listar\n");
+        printf("5. contar\n");
+        printf("9. sair\n");
+        printf("----------------------------\n");
+        printf("DIGITE: \n");
+        scanf("%i", &opc);
+
+        if (opc == 1) {
+            printf("Digite o RA: ");
+            scanf("%i", &numero);
+            adicionar(ra, numero);
+
+        } else if (opc == 2) {
+            remover(ra);
+
+        } else if (opc == 3) {
+            printf("Digite o RA para pesquisar: ");
+            scanf("%i", &numero);
+            pesquisar(ra, numero);
+
+        } else if (opc == 4) {
+            exibir(ra);
+
+        } else if (opc == 5) {
+            contar(ra);
+        }
+
+    } while (opc != 9);
+}
+
+int main(int argc, char *argv[]) {
+    menu();
+    return 0;
+}
+
 	
 	} while (opc != 9);
 }
@@ -64,3 +117,4 @@ void menu() {
 int main(int argc, char *argv[]) {
 	menu();
 }
+----------------------------------------------------------------------------------------- Q2
