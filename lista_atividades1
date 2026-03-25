@@ -206,3 +206,136 @@ int main() {
 
     return 0;
 }
+
+----------------------------------------------------------------------------------------------------------------------------------------------------// Q3
+#include <stdio.h>
+
+#define LINHAS 5
+#define COLUNAS 10
+
+int main() {
+
+    int matriz[LINHAS][COLUNAS];
+    int opc = 0;
+    int i, j;
+
+    do {
+        printf("\n:::::::::: MENU MATRIZ ::::::::::\n");
+        printf("1. Carregar valores\n");
+        printf("2. Exibir valores\n");
+        printf("3. Limpar valores\n");
+        printf("4. Exibir o maior e menor valor\n");
+        printf("5. Contar valores acima da media\n");
+        printf("6. Exibir valores por linha\n");
+        printf("7. Identificar linha com maior soma\n");
+        printf("9. Sair\n");
+        printf("Digite: ");
+        scanf("%d", &opc);
+
+        if (opc == 1) {
+            for (i = 0; i < LINHAS; i++) {
+                for (j = 0; j < COLUNAS; j++) {
+                    printf("Digite o valor [%d][%d]: ", i, j);
+                    scanf("%d", &matriz[i][j]);
+                }
+            }
+        }
+
+        else if (opc == 2) {
+            for (i = 0; i < LINHAS; i++) {
+                for (j = 0; j < COLUNAS; j++) {
+                    printf("%d ", matriz[i][j]);
+                }
+                printf("\n");
+            }
+        }
+
+        else if (opc == 3) {
+            for (i = 0; i < LINHAS; i++) {
+                for (j = 0; j < COLUNAS; j++) {
+                    matriz[i][j] = 0;
+                }
+            }
+            printf("Valores limpos.\n");
+        }
+
+        else if (opc == 4) {
+            int maior = matriz[0][0];
+            int menor = matriz[0][0];
+            for (i = 0; i < LINHAS; i++) {
+                for (j = 0; j < COLUNAS; j++) {
+                    if (matriz[i][j] > maior) {
+                        maior = matriz[i][j];
+                    }
+                    if (matriz[i][j] < menor) {
+                        menor = matriz[i][j];
+                    }
+                }
+            }
+            printf("Maior valor: %d\n", maior);
+            printf("Menor valor: %d\n", menor);
+        }
+
+        else if (opc == 5) {
+            float soma = 0;
+            float media = 0;
+            int cont = 0;
+            for (i = 0; i < LINHAS; i++) {
+                for (j = 0; j < COLUNAS; j++) {
+                    soma += matriz[i][j];
+                }
+            }
+            media = soma / (LINHAS * COLUNAS);
+            for (i = 0; i < LINHAS; i++) {
+                for (j = 0; j < COLUNAS; j++) {
+                    if (matriz[i][j] > media) {
+                        cont++;
+                    }
+                }
+            }
+            printf("Media: %.2f\n", media);
+            printf("Valores acima da media: %d\n", cont);
+        }
+
+        else if (opc == 6) {
+            int linha_escolhida;
+            printf("Digite a linha desejada (0 a %d): ", LINHAS - 1);
+            scanf("%d", &linha_escolhida);
+            if (linha_escolhida >= 0 && linha_escolhida < LINHAS) {
+                for (j = 0; j < COLUNAS; j++) {
+                    printf("%d ", matriz[linha_escolhida][j]);
+                }
+                printf("\n");
+            } else {
+                printf("Linha invalida.\n");
+            }
+        }
+
+        else if (opc == 7) {
+            int maior_soma = -1;
+            int linha_vencedora = 0;
+            for (i = 0; i < LINHAS; i++) {
+                int soma_linha = 0;
+                for (j = 0; j < COLUNAS; j++) {
+                    soma_linha += matriz[i][j];
+                }
+                if (i == 0 || soma_linha > maior_soma) {
+                    maior_soma = soma_linha;
+                    linha_vencedora = i;
+                }
+            }
+            printf("A linha %d tem a maior soma: %d\n", linha_vencedora, maior_soma);
+        }
+
+        else if (opc == 9) {
+            printf("Saindo...\n");
+        }
+
+        else {
+            printf("Opcao invalida.\n");
+        }
+
+    } while (opc != 9);
+
+    return 0;
+}
