@@ -704,6 +704,251 @@ int main(){
     return 0;
 }
 ----------------------------------------------------------------------------------------- Q5
+#include <stdio.h>
+#include <stdlib.h>
+
+#define TAM 100
+
+int vetA[TAM] = {0};
+int vetB[TAM] = {0};
+
+void adicionarA(int valor){
+    int i;
+    for (i = 0; i < TAM; i++) {
+        if (vetA[i] == 0) {
+            vetA[i] = valor;
+            printf("Valor %i adicionado ao Vetor A na posicao %i\n", valor, i);
+            return;
+        }
+    }
+    printf("Vetor A cheio!\n");
+}
+
+void adicionarB(int valor){
+    int i;
+    for (i = 0; i < TAM; i++) {
+        if (vetB[i] == 0) {
+            vetB[i] = valor;
+            printf("Valor %i adicionado ao Vetor B na posicao %i\n", valor, i);
+            return;
+        }
+    }
+    printf("Vetor B cheio!\n");
+}
+
+void removerA(int pos){
+    if (pos < 0 || pos >= TAM) {
+        printf("Posicao invalida no Vetor A!\n");
+    } else {
+        printf("Removendo valor da posicao %i de A\n", pos);
+        vetA[pos] = 0;
+    }
+}
+
+void removerB(int pos){
+    if (pos < 0 || pos >= TAM) {
+        printf("Posicao invalida no Vetor B!\n");
+    } else {
+        printf("Removendo valor da posicao %i de B\n", pos);
+        vetB[pos] = 0;
+    }
+}
+
+void imprimirA(){
+    int i;
+    int vazio = 1;
+    printf("Vetor A: ");
+    for (i = 0; i < TAM; i++) {
+        if (vetA[i] != 0) {
+            printf("[%i]=%i ", i, vetA[i]);
+            vazio = 0;
+        }
+    }
+    if (vazio == 1) printf("Vazio");
+    printf("\n");
+}
+
+void imprimirB(){
+    int i;
+    int vazio = 1;
+    printf("Vetor B: ");
+    for (i = 0; i < TAM; i++) {
+        if (vetB[i] != 0) {
+            printf("[%i]=%i ", i, vetB[i]);
+            vazio = 0;
+        }
+    }
+    if (vazio == 1) printf("Vazio");
+    printf("\n");
+}
+
+int contar(int vet[]){
+    int i;
+    int c = 0;
+    for (i = 0; i < TAM; i++) {
+        if (vet[i] != 0) {
+            c++;
+        }
+    }
+    return c;
+}
+
+int somar(int vet[]){
+    int i;
+    int s = 0;
+    for (i = 0; i < TAM; i++) {
+        s = s + vet[i];
+    }
+    return s;
+}
+
+float media(int vet[]){
+    int c;
+    int s;
+    c = contar(vet);
+    s = somar(vet);
+    if (c > 0) return (float)s / c;
+    return 0;
+}
+
+int maiorValor(int vet[]){
+    int i;
+    int m = 0;
+    for (i = 0; i < TAM; i++) {
+        if (vet[i] > m) {
+            m = vet[i];
+        }
+    }
+    return m;
+}
+
+int menorValor(int vet[]){
+    int i;
+    int m = -1;
+    for (i = 0; i < TAM; i++) {
+        if (vet[i] != 0) {
+            if (m == -1 || vet[i] < m) {
+                m = vet[i];
+            }
+        }
+    }
+    return m;
+}
+
+void menu(){
+    int opc, val, pos;
+    int cA, cB, sA, sB, mA, mB;
+    float medA, medB;
+
+    do {
+        printf("\n****************************\n");
+        printf("MENU - VETORES A e B\n");
+        printf("1 - Adicionar vetor A\n");
+        printf("2 - Adicionar vetor B\n");
+        printf("3 - Remover do vetor A valor da posicao X\n");
+        printf("4 - Remover do vetor B valor da posicao X\n");
+        printf("5 - Imprimir vetor A\n");
+        printf("6 - Imprimir vetor B\n");
+        printf("7 - Contar valores vetor A\n");
+        printf("8 - Contar valores vetor B\n");
+        printf("9 - Somar valores de cada vetor e apresentar\n");
+        printf("10 - Qual vetor tem maior quantidade de valores?\n");
+        printf("11 - Qual vetor tem a maior soma de valores?\n");
+        printf("12 - Transferir valores Pares do vetor A para o B\n");
+        printf("13 - Transferir valores Impares do vetor B para o A\n");
+        printf("14 - Media de valores de cada vetor\n");
+        printf("15 - Qual vetor apresenta a maior media?\n");
+        printf("16 - Maior valor de cada vetor\n");
+        printf("17 - Menor valor de cada vetor\n");
+        printf("18 - Qual vetor apresenta o maior valor?\n");
+        printf("\n99 - Sair.\n");
+        printf("****************************\n");
+        printf("Digite a opcao desejada: ");
+        scanf("%i", &opc);
+
+        if (opc == 1) {
+            printf("Digite o valor para A: ");
+            scanf("%i", &val);
+            adicionarA(val);
+        } else if (opc == 2) {
+            printf("Digite o valor para B: ");
+            scanf("%i", &val);
+            adicionarB(val);
+        } else if (opc == 3) {
+            printf("Digite a posicao X em A: ");
+            scanf("%i", &pos);
+            removerA(pos);
+        } else if (opc == 4) {
+            printf("Digite a posicao X em B: ");
+            scanf("%i", &pos);
+            removerB(pos);
+        } else if (opc == 5) {
+            imprimirA();
+        } else if (opc == 6) {
+            imprimirB();
+        } else if (opc == 7) {
+            printf("Total de valores em A: %i\n", contar(vetA));
+        } else if (opc == 8) {
+            printf("Total de valores em B: %i\n", contar(vetB));
+        } else if (opc == 9) {
+            printf("Soma A: %i | Soma B: %i\n", somar(vetA), somar(vetB));
+        } else if (opc == 10) {
+            cA = contar(vetA);
+            cB = contar(vetB);
+            if (cA > cB) printf("O vetor A tem mais valores.\n");
+            else if (cB > cA) printf("O vetor B tem mais valores.\n");
+            else printf("Ambos tem a mesma quantidade.\n");
+        } else if (opc == 11) {
+            sA = somar(vetA);
+            sB = somar(vetB);
+            if (sA > sB) printf("O vetor A tem a maior soma.\n");
+            else if (sB > sA) printf("O vetor B tem a maior soma.\n");
+            else printf("Somas iguais.\n");
+        } else if (opc == 12) {
+            int i;
+            for (i = 0; i < TAM; i++) {
+                if (vetA[i] != 0 && vetA[i] % 2 == 0) {
+                    adicionarB(vetA[i]);
+                    vetA[i] = 0;
+                }
+            }
+            printf("Valores pares transferidos de A para B.\n");
+        } else if (opc == 13) {
+            int i;
+            for (i = 0; i < TAM; i++) {
+                if (vetB[i] != 0 && vetB[i] % 2 != 0) {
+                    adicionarA(vetB[i]);
+                    vetB[i] = 0;
+                }
+            }
+            printf("Valores impares transferidos de B para A.\n");
+        } else if (opc == 14) {
+            printf("Media A: %.2f | Media B: %.2f\n", media(vetA), media(vetB));
+        } else if (opc == 15) {
+            medA = media(vetA);
+            medB = media(vetB);
+            if (medA > medB) printf("Vetor A apresenta a maior media.\n");
+            else if (medB > medA) printf("Vetor B apresenta a maior media.\n");
+            else printf("Medias iguais.\n");
+        } else if (opc == 16) {
+            printf("Maior de A: %i | Maior de B: %i\n", maiorValor(vetA), maiorValor(vetB));
+        } else if (opc == 17) {
+            printf("Menor de A: %i | Menor de B: %i\n", menorValor(vetA), menorValor(vetB));
+        } else if (opc == 18) {
+            mA = maiorValor(vetA);
+            mB = maiorValor(vetB);
+            if (mA > mB) printf("O maior valor absoluto esta no Vetor A (%i)\n", mA);
+            else if (mB > mA) printf("O maior valor absoluto esta no Vetor B (%i)\n", mB);
+            else printf("Empate no maior valor (%i)\n", mA);
+        }
+
+    } while (opc != 99);
+}
+
+int main(){
+    menu();
+    return 0;
+}
 
 
 
