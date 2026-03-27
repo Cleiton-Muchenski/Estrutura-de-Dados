@@ -1,1 +1,262 @@
-deus me ajude!.
+----------------------------------------------------------------------------------- Q1
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define TAM 100
+
+typedef struct {
+    int codigo;
+    char titulo[50];
+    float preco;
+} Livro;
+
+Livro pilha[TAM];
+int topo = -1;
+
+void empilhar(Livro liv) {
+    if (topo < TAM - 1) {
+        topo++;
+        pilha[topo] = liv;
+        printf("Livro '%s' empilhado!\n", liv.titulo);
+    } else {
+        printf("Erro: A pilha esta cheia!\n");
+    }
+}
+
+void desempilhar() {
+    if (topo >= 0) {
+        printf("Livro '%s' desempilhado!\n", pilha[topo].titulo);
+        topo--;
+    } else {
+        printf("Erro: A pilha esta vazia!\n");
+    }
+}
+
+void imprimir() {
+    int i;
+    if (topo == -1) {
+        printf("Pilha vazia!\n");
+    } else {
+        printf("\n--- LIVROS NA PILHA ---\n");
+        for (i = topo; i >= 0; i--) {
+            printf("Posicao: %i | Codigo: %i | Titulo: %s | Preco: R$ %.2f\n", i, pilha[i].codigo, pilha[i].titulo, pilha[i].preco);
+        }
+        printf("------------------------\n");
+    }
+}
+
+void menu() {
+    int opc;
+    Livro novoLivro;
+
+    do {
+        printf("\n****************************\n");
+        printf("MENU\n");
+        printf("1 - Empilhar\n");
+        printf("2 - Desempilhar\n");
+        printf("3 - Imprimir\n");
+        printf("99 - Sair\n");
+        printf("****************************\n");
+        printf("Digite a opcao desejada: ");
+        scanf("%i", &opc);
+
+        if (opc == 1) {
+            printf("Digite o codigo do livro: ");
+            scanf("%i", &novoLivro.codigo);
+            printf("Digite o titulo do livro: ");
+            scanf(" %[^\n]s", novoLivro.titulo); 
+            printf("Digite o preco do livro: ");
+            scanf("%f", &novoLivro.preco);
+            
+            empilhar(novoLivro);
+        } else if (opc == 2) {
+            desempilhar();
+        } else if (opc == 3) {
+            imprimir();
+        }
+
+    } while (opc != 99);
+}
+
+int main() {
+    menu();
+    return 0;
+}
+----------------------------------------------------------------------------------- Q2
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define TAM 100
+
+typedef struct {
+    int codigo;
+    float altura;
+    float largura;
+    float profundidade;
+    char marca[50];
+    char empresa[50];
+} Container;
+
+Container pilha[TAM];
+int topo = -1;
+
+int estaVazia() {
+    if (topo == -1) {
+        return 1;
+    }
+    return 0;
+}
+
+int estaCheia() {
+    if (topo == TAM - 1) {
+        return 1;
+    }
+    return 0;
+}
+
+void empilhar(Container cont) {
+    if (estaCheia() == 0) {
+        topo++;
+        pilha[topo] = cont;
+        printf("Container %i empilhado!\n", cont.codigo);
+    } else {
+        printf("Erro: Pilha cheia!\n");
+    }
+}
+
+void empilharDados(int cod, float alt, float lar, float pro, char mar[], char emp[]) {
+    Container c;
+    if (estaCheia() == 0) {
+        c.codigo = cod;
+        c.altura = alt;
+        c.largura = lar;
+        c.profundidade = pro;
+        strcpy(c.marca, mar);
+        strcpy(c.empresa, emp);
+        empilhar(c);
+    } else {
+        printf("Erro: Pilha cheia!\n");
+    }
+}
+
+void desempilhar() {
+    if (estaVazia() == 0) {
+        printf("Container %i desempilhado!\n", pilha[topo].codigo);
+        topo--;
+    } else {
+        printf("Erro: Pilha vazia!\n");
+    }
+}
+
+void imprimirTodos() {
+    int i;
+    if (estaVazia() == 1) {
+        printf("Pilha vazia!\n");
+    } else {
+        for (i = topo; i >= 0; i--) {
+            printf("Cod: %i | Empresa: %s | Marca: %s\n", pilha[i].codigo, pilha[i].empresa, pilha[i].marca);
+        }
+    }
+}
+
+void imprimirPorEmpresa(char emp[]) {
+    int i;
+    int achou = 0;
+    for (i = topo; i >= 0; i--) {
+        if (strcmp(pilha[i].empresa, emp) == 0) {
+            printf("Cod: %i | Marca: %s | Empresa: %s\n", pilha[i].codigo, pilha[i].marca, pilha[i].empresa);
+            achou = 1;
+        }
+    }
+    if (achou == 0) printf("Nenhum container da empresa %s encontrado.\n", emp);
+}
+
+void imprimirTopo() {
+    if (estaVazia() == 0) {
+        printf("Topo -> Cod: %i | Empresa: %s\n", pilha[topo].codigo, pilha[topo].empresa);
+    } else {
+        printf("Pilha vazia!\n");
+    }
+}
+
+void pesquisarImprimir(int cod) {
+    int i;
+    int achou = 0;
+    for (i = topo; i >= 0; i--) {
+        if (pilha[i].codigo == cod) {
+            printf("Dados: Cod %i, Alt %.2f, Lar %.2f, Prof %.2f, Marca %s, Empresa %s\n", 
+                pilha[i].codigo, pilha[i].altura, pilha[i].largura, 
+                pilha[i].profundidade, pilha[i].marca, pilha[i].empresa);
+            achou = 1;
+        }
+    }
+    if (achou == 0) printf("Codigo %i nao encontrado.\n", cod);
+}
+
+int obterNumeroElementos() {
+    return topo + 1;
+}
+
+void menu() {
+    int opc, cod;
+    float alt, lar, pro;
+    char mar[50], emp[50];
+    Container c;
+
+    do {
+        printf("\n******** MENU - CONTAINERS ********\n");
+        printf("1 - Empilhar (Container)\n");
+        printf("2 - Empilhar (Dados avulsos)\n");
+        printf("3 - Desempilhar\n");
+        printf("4 - Imprimir Todos (Topo para Base)\n");
+        printf("5 - Imprimir por Empresa\n");
+        printf("6 - Imprimir Topo\n");
+        printf("7 - Pesquisar por Codigo\n");
+        printf("8 - Quantidade de Elementos\n");
+        printf("99 - Sair\n");
+        printf("***********************************\n");
+        printf("Opcao: ");
+        scanf("%i", &opc);
+
+        if (opc == 1 || opc == 2) {
+            printf("Codigo: "); scanf("%i", &cod);
+            printf("Altura: "); scanf("%f", &alt);
+            printf("Largura: "); scanf("%f", &lar);
+            printf("Profundidade: "); scanf("%f", &pro);
+            printf("Marca: "); scanf(" %[^\n]s", mar);
+            printf("Empresa: "); scanf(" %[^\n]s", emp);
+            
+            if (opc == 1) {
+                c.codigo = cod; c.altura = alt; c.largura = lar;
+                c.profundidade = pro; strcpy(c.marca, mar); strcpy(c.empresa, emp);
+                empilhar(c);
+            } else {
+                empilharDados(cod, alt, lar, pro, mar, emp);
+            }
+        } else if (opc == 3) {
+            desempilhar();
+        } else if (opc == 4) {
+            imprimirTodos();
+        } else if (opc == 5) {
+            printf("Nome da empresa: ");
+            scanf(" %[^\n]s", emp);
+            imprimirPorEmpresa(emp);
+        } else if (opc == 6) {
+            imprimirTopo();
+        } else if (opc == 7) {
+            printf("Codigo para busca: ");
+            scanf("%i", &cod);
+            pesquisarImprimir(cod);
+        } else if (opc == 8) {
+            printf("Total de elementos: %i\n", obterNumeroElementos());
+        }
+
+    } while (opc != 99);
+}
+
+int main() {
+    menu();
+    return 0;
+}
