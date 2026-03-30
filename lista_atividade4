@@ -1,0 +1,336 @@
+---------------------------------------------------------------------------------------------------- Q1
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define TAM 10
+
+typedef struct Veiculo {
+    char placa[10];
+    char nomeMotorista[50];
+    float totalPedido;
+} Veiculo;
+
+Veiculo fila[TAM];
+int inicio = 0;
+int fim = 0;
+int quantidade = 0;
+
+void adicionar(Veiculo v) {
+    if (quantidade < TAM) {
+        fila[fim] = v;
+        
+        fim = fim + 1;
+        if (fim == TAM) {
+            fim = 0; 
+        }
+        
+        quantidade = quantidade + 1;
+        printf("Veiculo placa %s adicionado na fila do drive thru!\n", v.placa);
+    } else {
+        printf("Fila cheia! Limite de 10 veiculos atingido.\n");
+    }
+}
+
+void atender() {
+    if (quantidade > 0) {
+        printf("Atendendo veiculo placa %s (Motorista: %s)\n", fila[inicio].placa, fila[inicio].nomeMotorista);
+        
+        inicio = inicio + 1;
+        if (inicio == TAM) {
+            inicio = 0; 
+        }
+        
+        quantidade = quantidade - 1;
+    } else {
+        printf("Nao ha veiculos na fila para atender.\n");
+    }
+}
+
+void veiculosNaFila() {
+    int i;
+    int pos;
+    
+    if (quantidade == 0) {
+        printf("Fila vazia!\n");
+    } else {
+        printf("\n--- VEICULOS NA FILA ---\n");
+        pos = inicio;
+        for (i = 0; i < quantidade; i++) {
+            printf("[%i] Placa: %s | Motorista: %s\n", i + 1, fila[pos].placa, fila[pos].nomeMotorista);
+            
+            pos = pos + 1;
+            if (pos == TAM) {
+                pos = 0;
+            }
+        }
+        printf("------------------------\n");
+    }
+}
+
+void numeroVeiculosParaAtender() {
+    printf("Numero de veiculos aguardando na fila: %i\n", quantidade);
+}
+
+void pesquisar(char placaBusca[]) {
+    int i;
+    int pos;
+    int achou = 0;
+    
+    pos = inicio;
+    for (i = 0; i < quantidade; i++) {
+        if (strcmp(fila[pos].placa, placaBusca) == 0) {
+            printf("Veiculo encontrado na posicao %i da fila!\n", i + 1);
+            printf("Motorista: %s | Total Pedido: R$ %.2f\n", fila[pos].nomeMotorista, fila[pos].totalPedido);
+            achou = 1;
+        }
+        
+        pos = pos + 1;
+        if (pos == TAM) {
+            pos = 0;
+        }
+    }
+    
+    if (achou == 0) {
+        printf("Veiculo com placa %s nao encontrado na fila.\n", placaBusca);
+    }
+}
+
+void menu() {
+    int opc;
+    char buscaPlaca[10];
+    Veiculo novo;
+
+    do {
+        printf("\n**************************************************\n");
+        printf("MENU - DRIVE THRU\n");
+        printf("1 - Adicionar (Adicionar um veiculo na fila)\n");
+        printf("2 - Atender (Remover um veiculo da fila)\n");
+        printf("3 - Veiculos na Fila (Exibir placa e motorista)\n");
+        printf("4 - Numero de Veiculos para Atender (Exibir total)\n");
+        printf("5 - Pesquisar (Verificar placa na fila)\n");
+        printf("99 - Sair\n");
+        printf("**************************************************\n");
+        printf("Digite a opcao desejada: ");
+        scanf("%i", &opc);
+
+        if (opc == 1) {
+            printf("Digite a placa: "); scanf(" %s", novo.placa);
+            printf("Nome do Motorista: "); scanf(" %[^\n]s", novo.nomeMotorista);
+            printf("Total do Pedido: "); scanf("%f", &novo.totalPedido);
+            adicionar(novo);
+        } else if (opc == 2) {
+            atender();
+        } else if (opc == 3) {
+            veiculosNaFila();
+        } else if (opc == 4) {
+            numeroVeiculosParaAtender();
+        } else if (opc == 5) {
+            printf("Digite a placa para pesquisar: "); scanf(" %s", buscaPlaca);
+            pesquisar(buscaPlaca);
+        }
+
+    } while (opc != 99);
+}
+
+int main() {
+    menu();
+    return 0;
+}
+
+---------------------------------------------------------------------------------------------------- Q2
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define TAM 10
+
+typedef struct Caminhao {
+    char placa[10];
+    char marca[30];
+    float pesoTotal;
+    int numeroCaixas;
+} Caminhao;
+
+Caminhao fila[TAM];
+int inicio = 0;
+int fim = 0;
+int quantidade = 0;
+
+int patioCheio() {
+    if (quantidade == TAM) {
+        return 1;
+    }
+    return 0;
+}
+
+void chegada(Caminhao c) {
+    if (patioCheio() == 0) {
+        fila[fim] = c;
+        fim = fim + 1;
+        if (fim == TAM) {
+            fim = 0;
+        }
+        quantidade = quantidade + 1;
+        printf("Caminhao placa %s adicionado na fila de espera.\n", c.placa);
+    } else {
+        printf("Erro: Patio cheio! Nao ha espaco para novos caminhoes.\n");
+    }
+}
+
+void descarregar() {
+    if (quantidade > 0) {
+        printf("Chamando caminhao placa %s para descarregar e retirando da fila.\n", fila[inicio].placa);
+        inicio = inicio + 1;
+        if (inicio == TAM) {
+            inicio = 0;
+        }
+        quantidade = quantidade - 1;
+    } else {
+        printf("Nao ha caminhoes na fila para descarregar.\n");
+    }
+}
+
+void pesquisar(char placaBusca[]) {
+    int i;
+    int pos;
+    int achou = 0;
+    
+    pos = inicio;
+    for (i = 0; i < quantidade; i++) {
+        if (strcmp(fila[pos].placa, placaBusca) == 0) {
+            printf("Caminhao placa %s esta na fila de espera (Posicao %i).\n", placaBusca, i + 1);
+            achou = 1;
+        }
+        pos = pos + 1;
+        if (pos == TAM) {
+            pos = 0;
+        }
+    }
+    if (achou == 0) {
+        printf("Caminhao com placa %s nao encontrado na fila.\n", placaBusca);
+    }
+}
+
+void maisPesado() {
+    int i;
+    int pos;
+    int posMaior;
+    float maiorPeso = -1;
+    
+    if (quantidade > 0) {
+        pos = inicio;
+        for (i = 0; i < quantidade; i++) {
+            if (fila[pos].pesoTotal > maiorPeso) {
+                maiorPeso = fila[pos].pesoTotal;
+                posMaior = pos;
+            }
+            pos = pos + 1;
+            if (pos == TAM) {
+                pos = 0;
+            }
+        }
+        printf("Dados do caminhao mais pesado:\nPlaca: %s | Marca: %s | Peso: %.2f\n", 
+               fila[posMaior].placa, fila[posMaior].marca, maiorPeso);
+    } else {
+        printf("Fila vazia!\n");
+    }
+}
+
+void pesoTotalPatioEspera() {
+    int i;
+    int pos;
+    float soma = 0;
+    
+    pos = inicio;
+    for (i = 0; i < quantidade; i++) {
+        soma = soma + fila[pos].pesoTotal;
+        pos = pos + 1;
+        if (pos == TAM) {
+            pos = 0;
+        }
+    }
+    printf("Soma dos pesos de todos caminhoes no patio: %.2f kg\n", soma);
+}
+
+void menorNumeroCaixas() {
+    int i;
+    int pos;
+    int posMenor;
+    int menorC = -1;
+    
+    if (quantidade > 0) {
+        pos = inicio;
+        for (i = 0; i < quantidade; i++) {
+            if (menorC == -1 || fila[pos].numeroCaixas < menorC) {
+                menorC = fila[pos].numeroCaixas;
+                posMenor = pos;
+            }
+            pos = pos + 1;
+            if (pos == TAM) {
+                pos = 0;
+            }
+        }
+        printf("Caminhao com menor numero de caixas:\nPlaca: %s | Marca: %s | Caixas: %i\n", 
+               fila[posMenor].placa, fila[posMenor].marca, menorC);
+    } else {
+        printf("Fila vazia!\n");
+    }
+}
+
+int numeroCaminhoesEspera() {
+    return quantidade;
+}
+
+void menu() {
+    int opc;
+    char p[10];
+    Caminhao cam;
+
+    do {
+        printf("\n**************************************************\n");
+        printf("MENU - LOGISTICA S.A.\n");
+        printf("1 - Chegada (Adicionar na fila de espera)\n");
+        printf("2 - Descarregar (Chamar e retirar da fila)\n");
+        printf("3 - Patio Cheio? (Verificar espaco)\n");
+        printf("4 - Pesquisar (Verificar placa na fila)\n");
+        printf("5 - Mais Pesado (Exibir dados)\n");
+        printf("6 - Peso Total Patio Espera (Soma dos pesos)\n");
+        printf("7 - Menor Numero de Caixas (Exibir dados)\n");
+        printf("8 - Numero de Caminhoes em Espera\n");
+        printf("99 - Sair\n");
+        printf("**************************************************\n");
+        printf("Digite a opcao desejada: ");
+        scanf("%i", &opc);
+
+        if (opc == 1) {
+            printf("Placa: "); scanf(" %s", cam.placa);
+            printf("Marca: "); scanf(" %[^\n]s", cam.marca);
+            printf("Peso Total: "); scanf("%f", &cam.pesoTotal);
+            printf("Numero de Caixas: "); scanf("%i", &cam.numeroCaixas);
+            chegada(cam);
+        } else if (opc == 2) {
+            descarregar();
+        } else if (opc == 3) {
+            if (patioCheio() == 1) printf("True - O patio esta cheio.\n");
+            else printf("False - Ainda existe espaco no patio.\n");
+        } else if (opc == 4) {
+            printf("Digite a placa para pesquisa: "); scanf(" %s", p);
+            pesquisar(p);
+        } else if (opc == 5) {
+            maisPesado();
+        } else if (opc == 6) {
+            pesoTotalPatioEspera();
+        } else if (opc == 7) {
+            menorNumeroCaixas();
+        } else if (opc == 8) {
+            printf("Numero de caminhoes em espera: %i\n", numeroCaminhoesEspera());
+        }
+
+    } while (opc != 99);
+}
+
+int main() {
+    menu();
+    return 0;
+}
