@@ -1,0 +1,372 @@
+------------------------------------------------------------------ Q1
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct Veiculo {
+    int codigo;
+    char placa[20];
+    char modelo[50];
+    char marca[50];
+    float preco;
+    struct Veiculo *prox;
+};
+
+struct Fila {
+    struct Veiculo *ini;
+    struct Veiculo *fim;
+};
+
+void criar(struct Fila *f) {
+    f->ini = NULL;
+    f->fim = NULL;
+}
+
+int vazia(struct Fila *f) {
+    if (f->ini == NULL) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+void enfileirar(struct Fila *f) {
+    struct Veiculo *novo = (struct Veiculo*) malloc(sizeof(struct Veiculo));
+    if (novo == NULL) {
+        printf("erro\n");
+    } else {
+        printf("Codigo: ");
+        scanf("%d", &novo->codigo);
+        printf("Placa: ");
+        scanf("%s", novo->placa);
+        printf("Modelo: ");
+        scanf("%s", novo->modelo);
+        printf("Marca: ");
+        scanf("%s", novo->marca);
+        printf("Preco: ");
+        scanf("%f", &novo->preco);
+        
+        novo->prox = NULL;
+
+        if (vazia(f) == 1) {
+            f->ini = novo;
+            f->fim = novo;
+        } else {
+            f->fim->prox = novo;
+            f->fim = novo;
+        }
+    }
+}
+
+void desenfileirar(struct Fila *f) {
+    if (vazia(f) == 1) {
+        printf("Fila vazia\n");
+    } else {
+        struct Veiculo *aux = f->ini;
+        f->ini = f->ini->prox;
+        if (f->ini == NULL) {
+            f->fim = NULL;
+        }
+        free(aux);
+        printf("Removido!\n");
+    }
+}
+
+void relatorio(struct Fila *f) {
+    if (vazia(f) == 1) {
+        printf("Vazia\n");
+    } else {
+        struct Veiculo *atual = f->ini;
+        while (atual != NULL) {
+            printf("Cod: %d | Placa: %s | Modelo: %s | Preco: %.2f\n", atual->codigo, atual->placa, atual->modelo, atual->preco);
+            atual = atual->prox;
+        }
+    }
+}
+
+void inicio(struct Fila *f) {
+    if (vazia(f) == 1) {
+        printf("Vazia\n");
+    } else {
+        printf("Primeiro: %s - %s\n", f->ini->placa, f->ini->modelo);
+    }
+}
+
+void final(struct Fila *f) {
+    if (vazia(f) == 1) {
+        printf("Vazia\n");
+    } else {
+        printf("Ultimo: %s - %s\n", f->fim->placa, f->fim->modelo);
+    }
+}
+
+void total(struct Fila *f) {
+    int cont = 0;
+    struct Veiculo *aux = f->ini;
+    while (aux != NULL) {
+        cont++;
+        aux = aux->prox;
+    }
+    printf("Total de veiculos: %d\n", cont);
+}
+
+void localizar(struct Fila *f) {
+    if (vazia(f) == 1) {
+        printf("Vazia\n");
+    } else {
+        char p[20];
+        printf("Placa para buscar: ");
+        scanf("%s", p);
+        struct Veiculo *aux = f->ini;
+        int achou = 0;
+        while (aux != NULL) {
+            if (strcmp(aux->placa, p) == 0) {
+                printf("Localizado! Modelo: %s | Marca: %s\n", aux->modelo, aux->marca);
+                achou = 1;
+                break;
+            }
+            aux = aux->prox;
+        }
+        if (achou == 0) printf("Placa nao encontrada\n");
+    }
+}
+
+void mais_caro(struct Fila *f) {
+    if (vazia(f) == 1) {
+        printf("Vazia\n");
+    } else {
+        struct Veiculo *aux = f->ini;
+        struct Veiculo *caro = f->ini;
+        float maior = f->ini->preco;
+        while (aux != NULL) {
+            if (aux->preco > maior) {
+                maior = aux->preco;
+                caro = aux;
+            }
+            aux = aux->prox;
+        }
+        printf("Mais caro: %s por %.2f\n", caro->modelo, caro->preco);
+    }
+}
+
+void menu(struct Fila *f) {
+    int opc;
+    do {
+        printf("\n1-Enfileirar\n2-Desenfileirar\n3-Relatorio\n4-Inicio\n5-Final\n6-Total\n7-Localizar\n8-Mais Caro\n9-Sair\nOpcao: ");
+        scanf("%d", &opc);
+        if (opc == 1) enfileirar(f);
+        else if (opc == 2) desenfileirar(f);
+        else if (opc == 3) relatorio(f);
+        else if (opc == 4) inicio(f);
+        else if (opc == 5) final(f);
+        else if (opc == 6) total(f);
+        else if (opc == 7) localizar(f);
+        else if (opc == 8) mais_caro(f);
+    } while (opc != 9);
+}
+
+int main() {
+    struct Fila f1;
+    criar(&f1);
+    menu(&f1);
+    return 0;
+}
+
+------------------------------------------------------------------ Q2
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+struct Aluno {
+    int NumeroAtendimento;
+    char RA[20];
+    char Nome[50];
+    char Curso[50];
+    float ValorMensalidade;
+    struct Aluno *prox;
+};
+
+struct Fila {
+    struct Aluno *ini;
+    struct Aluno *fim;
+};
+
+void criar(struct Fila *f) {
+    f->ini = NULL;
+    f->fim = NULL;
+    srand(time(NULL)); 
+}
+
+int vazia(struct Fila *f) {
+    if (f->ini == NULL) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+void adicionar(struct Fila *f) {
+    char ra_novo[20];
+    printf("RA do aluno: ");
+    scanf("%s", ra_novo);
+
+    struct Aluno *aux = f->ini;
+    int ja_existe = 0;
+    while (aux != NULL) {
+        if (strcmp(aux->RA, ra_novo) == 0) {
+            ja_existe = 1;
+            break;
+        }
+        aux = aux->prox;
+    }
+
+    if (ja_existe == 1) {
+        printf("Erro: Aluno com esse RA ja esta na fila!\n");
+    } else {
+        struct Aluno *novo = (struct Aluno*) malloc(sizeof(struct Aluno));
+        strcpy(novo->RA, ra_novo);
+        printf("Nome: ");
+        scanf("%s", novo->Nome);
+        printf("Curso: ");
+        scanf("%s", novo->Curso);
+        printf("Mensalidade: ");
+        scanf("%f", &novo->ValorMensalidade);
+        
+        novo->NumeroAtendimento = rand() % 1000; 
+        novo->prox = NULL;
+
+        if (vazia(f) == 1) {
+            f->ini = novo;
+            f->fim = novo;
+        } else {
+            f->fim->prox = novo;
+            f->fim = novo;
+        }
+        printf("Adicionado! Senha: %d\n", novo->NumeroAtendimento);
+    }
+}
+
+void atender(struct Fila *f) {
+    if (vazia(f) == 1) {
+        printf("Ninguém na fila!\n");
+    } else {
+        struct Aluno *aux = f->ini;
+        printf("PAINEL: Chamando senha %d (Aluno: %s)\n", aux->NumeroAtendimento, aux->Nome);
+        f->ini = f->ini->prox;
+        if (f->ini == NULL) {
+            f->fim = NULL;
+        }
+        free(aux);
+    }
+}
+
+void relatorio(struct Fila *f) {
+    if (vazia(f) == 1) {
+        printf("Fila vazia\n");
+    } else {
+        struct Aluno *aux = f->ini;
+        while (aux != NULL) {
+            printf("[%d] RA: %s | Nome: %s | Curso: %s\n", aux->NumeroAtendimento, aux->RA, aux->Nome, aux->Curso);
+            aux = aux->prox;
+        }
+    }
+}
+
+void maiorMensalidade(struct Fila *f) {
+    if (vazia(f) == 1) {
+        printf("Fila vazia\n");
+    } else {
+        struct Aluno *aux = f->ini;
+        struct Aluno *maior = f->ini;
+        while (aux != NULL) {
+            if (aux->ValorMensalidade > maior->ValorMensalidade) {
+                maior = aux;
+            }
+            aux = aux->prox;
+        }
+        printf("Maior mensalidade: %s (%.2f)\n", maior->Nome, maior->ValorMensalidade);
+    }
+}
+
+void localizar(struct Fila *f) {
+    char busca[20];
+    printf("RA para buscar: ");
+    scanf("%s", busca);
+    struct Aluno *aux = f->ini;
+    int achou = 0;
+    while (aux != NULL) {
+        if (strcmp(aux->RA, busca) == 0) {
+            printf("Achou: %s - Curso: %s\n", aux->Nome, aux->Curso);
+            achou = 1;
+            break;
+        }
+        aux = aux->prox;
+    }
+    if (achou == 0) printf("RA nao encontrado.\n");
+}
+
+void mediaMensalidades(struct Fila *f) {
+    if (vazia(f) == 1) {
+        printf("Fila vazia\n");
+    } else {
+        float soma = 0;
+        int cont = 0;
+        struct Aluno *aux = f->ini;
+        while (aux != NULL) {
+            soma = soma + aux->ValorMensalidade;
+            cont++;
+            aux = aux->prox;
+        }
+        printf("Media das mensalidades: %.2f\n", soma / cont);
+    }
+}
+
+void numeroAlunosDoCurso(struct Fila *f) {
+    char c[50];
+    printf("Nome do curso: ");
+    scanf("%s", c);
+    int cont = 0;
+    struct Aluno *aux = f->ini;
+    while (aux != NULL) {
+        if (strcmp(aux->Curso, c) == 0) {
+            cont++;
+        }
+        aux = aux->prox;
+    }
+    printf("Alunos no curso %s: %d\n", c, cont);
+}
+
+void atenderX(struct Fila *f) {
+    int x, i;
+    printf("Quantos atender de uma vez? ");
+    scanf("%d", &x);
+    for (i = 0; i < x; i++) {
+        if (vazia(f) == 0) {
+            atender(f);
+        }
+    }
+}
+
+void menu(struct Fila *f) {
+    int opc;
+    do {
+        printf("\n1-Adicionar\n2-Atender\n3-Relatorio\n4-Maior Mensalidade\n5-Localizar RA\n6-Media\n7-Contar por Curso\n8-Atender X Alunos\n9-Sair\nOpcao: ");
+        scanf("%d", &opc);
+        if (opc == 1) adicionar(f);
+        else if (opc == 2) atender(f);
+        else if (opc == 3) relatorio(f);
+        else if (opc == 4) maiorMensalidade(f);
+        else if (opc == 5) localizar(f);
+        else if (opc == 6) mediaMensalidades(f);
+        else if (opc == 7) numeroAlunosDoCurso(f);
+        else if (opc == 8) atenderX(f);
+    } while (opc != 9);
+}
+
+int main() {
+    struct Fila f1;
+    criar(&f1);
+    menu(&f1);
+    return 0;
+}
