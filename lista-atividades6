@@ -1,0 +1,362 @@
+----------------------------------------------------------------------------- Q1
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct Livro {
+    int codigo;
+    char nome[50];
+    char classificacao[30];
+    float preco;
+    struct Livro *ant;
+    struct Livro *prox;
+};
+
+struct Lista {
+    struct Livro *ini;
+    struct Livro *fim;
+};
+
+void criar(struct Lista *l) {
+    l->ini = NULL;
+    l->fim = NULL;
+}
+
+int vazia(struct Lista *l) {
+    if (l->ini == NULL) return 1;
+    else return 0;
+}
+
+void add_inicio(struct Lista *l) {
+    struct Livro *novo = (struct Livro*) malloc(sizeof(struct Livro));
+    printf("Codigo: "); scanf("%d", &novo->codigo);
+    printf("Nome: "); scanf("%s", novo->nome);
+    printf("Classificacao: "); scanf("%s", novo->classificacao);
+    printf("Preco: "); scanf("%f", &novo->preco);
+    
+    novo->ant = NULL;
+    novo->prox = l->ini;
+
+    if (vazia(l) == 1) {
+        l->fim = novo;
+    } else {
+        l->ini->ant = novo;
+    }
+    l->ini = novo;
+}
+
+void add_final(struct Lista *l) {
+    struct Livro *novo = (struct Livro*) malloc(sizeof(struct Livro));
+    printf("Codigo: "); scanf("%d", &novo->codigo);
+    printf("Nome: "); scanf("%s", novo->nome);
+    printf("Classificacao: "); scanf("%s", novo->classificacao);
+    printf("Preco: "); scanf("%f", &novo->preco);
+    
+    novo->prox = NULL;
+    novo->ant = l->fim;
+
+    if (vazia(l) == 1) {
+        l->ini = novo;
+    } else {
+        l->fim->prox = novo;
+    }
+    l->fim = novo;
+}
+
+void add_depois(struct Lista *l) {
+    if (vazia(l) == 1) return;
+    int cod;
+    printf("Adicionar apos qual codigo? "); scanf("%d", &cod);
+    struct Livro *aux = l->ini;
+    while (aux != NULL && aux->codigo != cod) aux = aux->prox;
+
+    if (aux != NULL) {
+        struct Livro *novo = (struct Livro*) malloc(sizeof(struct Livro));
+        printf("Codigo: "); scanf("%d", &novo->codigo);
+        printf("Nome: "); scanf("%s", novo->nome);
+        printf("Classificacao: "); scanf("%s", novo->classificacao);
+        printf("Preco: "); scanf("%f", &novo->preco);
+
+        novo->prox = aux->prox;
+        novo->ant = aux;
+        if (aux->prox == NULL) l->fim = novo;
+        else aux->prox->ant = novo;
+        aux->prox = novo;
+    }
+}
+
+void remover_cod(struct Lista *l) {
+    if (vazia(l) == 1) return;
+    int cod;
+    printf("Remover qual codigo? "); scanf("%d", &cod);
+    struct Livro *aux = l->ini;
+    while (aux != NULL && aux->codigo != cod) aux = aux->prox;
+
+    if (aux != NULL) {
+        if (aux->ant == NULL) l->ini = aux->prox;
+        else aux->ant->prox = aux->prox;
+
+        if (aux->prox == NULL) l->fim = aux->ant;
+        else aux->prox->ant = aux->ant;
+
+        free(aux);
+        printf("Removido!\n");
+    }
+}
+
+void imprimir_IF(struct Lista *l) {
+    struct Livro *aux = l->ini;
+    while (aux != NULL) {
+        printf("[%d | %s | %.2f]\n", aux->codigo, aux->nome, aux->preco);
+        aux = aux->prox;
+    }
+}
+
+void imprimir_FI(struct Lista *l) {
+    struct Livro *aux = l->fim;
+    while (aux != NULL) {
+        printf("[%d | %s | %.2f]\n", aux->codigo, aux->nome, aux->preco);
+        aux = aux->ant;
+    }
+}
+
+void media(struct Lista *l) {
+    if (vazia(l) == 1) return;
+    float soma = 0;
+    int c = 0;
+    struct Livro *aux = l->ini;
+    while (aux != NULL) {
+        soma += aux->preco;
+        c++;
+        aux = aux->prox;
+    }
+    printf("Media: %.2f\n", soma / c);
+}
+
+void resumo_classificacao(struct Lista *l) {
+    struct Livro *aux = l->ini;
+    while (aux != NULL) {
+        struct Livro *aux2 = l->ini;
+        int ja_contou = 0;
+        while (aux2 != aux) {
+            if (strcmp(aux2->classificacao, aux->classificacao) == 0) {
+                ja_contou = 1;
+                break;
+            }
+            aux2 = aux2->prox;
+        }
+        if (ja_contou == 0) {
+            int qtd = 0;
+            float soma = 0;
+            struct Livro *busca = l->ini;
+            while (busca != NULL) {
+                if (strcmp(busca->classificacao, aux->classificacao) == 0) {
+                    qtd++;
+                    soma += busca->preco;
+                }
+                busca = busca->prox;
+            }
+            printf("Class: %s | Qtd: %d | Soma: %.2f\n", aux->classificacao, qtd, soma);
+        }
+        aux = aux->prox;
+    }
+}
+
+void menu(struct Lista *l) {
+    int opc;
+    do {
+        printf("\n1-Add Inicio\n2-Add Final\n3-Add Apos Cod\n4-Remover Cod\n5-Imprimir IF\n6-Imprimir FI\n7-Media\n8-Resumo Classificacao\n9-Sair\nOpcao: ");
+        scanf("%d", &opc);
+        if (opc == 1) add_inicio(l);
+        else if (opc == 2) add_final(l);
+        else if (opc == 3) add_depois(l);
+        else if (opc == 4) remover_cod(l);
+        else if (opc == 5) imprimir_IF(l);
+        else if (opc == 6) imprimir_FI(l);
+        else if (opc == 7) media(l);
+        else if (opc == 8) resumo_classificacao(l);
+    } while (opc != 9);
+}
+
+int main() {
+    struct Lista lista;
+    criar(&lista);
+    menu(&lista);
+    return 0;
+}
+
+---------------------------------------------------------------------- Q2
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct Cliente {
+    char cpf[15];
+    char agencia[10];
+    char conta[15];
+    char tipo[20];
+    char nome[50];
+    struct Cliente *ant;
+    struct Cliente *prox;
+};
+
+struct FilaBanco {
+    struct Cliente *ini;
+    struct Cliente *fim;
+    int total_atendidos;
+    int total_inclusos;
+};
+
+void criar(struct FilaBanco *f) {
+    f->ini = NULL;
+    f->fim = NULL;
+    f->total_atendidos = 0;
+    f->total_inclusos = 0;
+}
+
+int vazia(struct FilaBanco *f) {
+    if (f->ini == NULL) return 1;
+    else return 0;
+}
+
+int cpf_existe(struct FilaBanco *f, char c[]) {
+    struct Cliente *aux = f->ini;
+    while (aux != NULL) {
+        if (strcmp(aux->cpf, c) == 0) return 1;
+        aux = aux->prox;
+    }
+    return 0;
+}
+
+void preencher_dados(struct Cliente *novo, struct FilaBanco *f) {
+    printf("CPF: "); scanf("%s", novo->cpf);
+    if (cpf_existe(f, novo->cpf)) {
+        printf("Erro: CPF ja existe!\n");
+        free(novo);
+        return;
+    }
+    printf("Agencia: "); scanf("%s", novo->agencia);
+    printf("Conta: "); scanf("%s", novo->conta);
+    printf("Tipo (DEPOSITO, PAGTO, SAQUE): "); scanf("%s", novo->tipo);
+    printf("Nome: "); scanf("%s", novo->nome);
+    f->total_inclusos++;
+}
+
+void add_inicio(struct FilaBanco *f) {
+    struct Cliente *novo = (struct Cliente*) malloc(sizeof(struct Cliente));
+    printf("CPF: "); scanf("%s", novo->cpf);
+    if (cpf_existe(f, novo->cpf)) {
+        printf("CPF Duplicado!\n");
+        free(novo);
+        return;
+    }
+    printf("Agencia: "); scanf("%s", novo->agencia);
+    printf("Conta: "); scanf("%s", novo->conta);
+    printf("Tipo: "); scanf("%s", novo->tipo);
+    printf("Nome: "); scanf("%s", novo->nome);
+
+    novo->ant = NULL;
+    novo->prox = f->ini;
+    if (vazia(f)) f->fim = novo;
+    else f->ini->ant = novo;
+    f->ini = novo;
+    f->total_inclusos++;
+}
+
+void add_final(struct FilaBanco *f) {
+    struct Cliente *novo = (struct Cliente*) malloc(sizeof(struct Cliente));
+    printf("CPF: "); scanf("%s", novo->cpf);
+    if (cpf_existe(f, novo->cpf)) {
+        printf("CPF Duplicado!\n");
+        free(novo);
+        return;
+    }
+    printf("Agencia: "); scanf("%s", novo->agencia);
+    printf("Conta: "); scanf("%s", novo->conta);
+    printf("Tipo: "); scanf("%s", novo->tipo);
+    printf("Nome: "); scanf("%s", novo->nome);
+
+    novo->prox = NULL;
+    novo->ant = f->fim;
+    if (vazia(f)) f->ini = novo;
+    else f->fim->prox = novo;
+    f->fim = novo;
+    f->total_inclusos++;
+}
+
+void remover_inicio(struct FilaBanco *f) {
+    if (vazia(f)) return;
+    struct Cliente *aux = f->ini;
+    f->ini = f->ini->prox;
+    if (f->ini == NULL) f->fim = NULL;
+    else f->ini->ant = NULL;
+    free(aux);
+    f->total_atendidos++;
+}
+
+void imprimir_avante(struct FilaBanco *f) {
+    struct Cliente *aux = f->ini;
+    while (aux != NULL) {
+        printf("[%s | %s | %s]\n", aux->nome, aux->cpf, aux->tipo);
+        aux = aux->prox;
+    }
+}
+
+void imprimir_atras(struct FilaBanco *f) {
+    struct Cliente *aux = f->fim;
+    while (aux != NULL) {
+        printf("[%s | %s | %s]\n", aux->nome, aux->cpf, aux->tipo);
+        aux = aux->ant;
+    }
+}
+
+void vizinhos(struct FilaBanco *f) {
+    char c[15];
+    printf("Digite o CPF: "); scanf("%s", c);
+    struct Cliente *aux = f->ini;
+    while (aux != NULL && strcmp(aux->cpf, c) != 0) aux = aux->prox;
+    
+    if (aux != NULL) {
+        if (aux->ant != NULL) printf("Anterior: %s\n", aux->ant->nome);
+        else printf("Nao tem anterior (Início)\n");
+        
+        if (aux->prox != NULL) printf("Proximo: %s\n", aux->prox->nome);
+        else printf("Nao tem proximo (Final)\n");
+    }
+}
+
+void resumo_tipos(struct FilaBanco *f) {
+    int d = 0, p = 0, s = 0;
+    struct Cliente *aux = f->ini;
+    while (aux != NULL) {
+        if (strcmp(aux->tipo, "DEPOSITO") == 0) d++;
+        else if (strcmp(aux->tipo, "PAGTO") == 0) p++;
+        else if (strcmp(aux->tipo, "SAQUE") == 0) s++;
+        aux = aux->prox;
+    }
+    printf("DEPOSITO: %d | PAGTO: %d | SAQUE: %d\n", d, p, s);
+}
+
+void menu(struct FilaBanco *f) {
+    int opc;
+    do {
+        printf("\n1-Add Inicio\n2-Add Final\n4-Remover Inicio\n7-Listar ->\n8-Listar <-\n12-Atendidos\n13-Total Inclusos\n14-Vizinhos\n15-Resumo Tipos\n9-Sair\nOpcao: ");
+        scanf("%d", &opc);
+        if (opc == 1) add_inicio(f);
+        else if (opc == 2) add_final(f);
+        else if (opc == 4) remover_inicio(f);
+        else if (opc == 7) imprimir_avante(f);
+        else if (opc == 8) imprimir_atras(f);
+        else if (opc == 12) printf("Atendidos: %d\n", f->total_atendidos);
+        else if (opc == 13) printf("Inclusos: %d\n", f->total_inclusos);
+        else if (opc == 14) vizinhos(f);
+        else if (opc == 15) resumo_tipos(f);
+    } while (opc != 9);
+}
+
+int main() {
+    struct FilaBanco fila;
+    criar(&fila);
+    menu(&fila);
+    return 0;
+}
