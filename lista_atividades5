@@ -370,3 +370,145 @@ int main() {
     menu(&f1);
     return 0;
 }
+
+---------------------------------------------------------------------------- Q3
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct Torcedor {
+    int cod;
+    int idade;
+    float valor;
+    int cadeira;
+    struct Torcedor *prox;
+};
+
+struct Fila {
+    struct Torcedor *ini;
+    struct Torcedor *fim;
+};
+
+void criar(struct Fila *f) {
+    f->ini = NULL;
+    f->fim = NULL;
+}
+
+int vazia(struct Fila *f) {
+    if (f->ini == NULL) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+void enfileirar(struct Fila *f) {
+    struct Torcedor *novo = (struct Torcedor*) malloc(sizeof(struct Torcedor));
+    if (novo == NULL) {
+        printf("erro\n");
+    } else {
+        printf("Codigo ingresso: ");
+        scanf("%d", &novo->cod);
+        printf("Idade: ");
+        scanf("%d", &novo->idade);
+        printf("Valor: ");
+        scanf("%f", &novo->valor);
+        printf("Numero cadeira: ");
+        scanf("%d", &novo->cadeira);
+        
+        novo->prox = NULL;
+
+        if (vazia(f) == 1) {
+            f->ini = novo;
+            f->fim = novo;
+        } else {
+            f->fim->prox = novo;
+            f->fim = novo;
+        }
+        printf("Torcedor na fila!\n");
+    }
+}
+
+void desenfileirar(struct Fila *f) {
+    if (vazia(f) == 1) {
+        printf("Fila vazia!\n");
+    } else {
+        struct Torcedor *aux = f->ini;
+        printf("Entrada liberada para: Cod %d\n", aux->cod);
+        f->ini = f->ini->prox;
+        if (f->ini == NULL) {
+            f->fim = NULL;
+        }
+        free(aux);
+    }
+}
+
+void contar(struct Fila *f) {
+    int c = 0;
+    struct Torcedor *aux = f->ini;
+    while (aux != NULL) {
+        c++;
+        aux = aux->prox;
+    }
+    printf("Torcedores aguardando: %d\n", c);
+}
+
+void exibir(struct Fila *f) {
+    if (vazia(f) == 1) {
+        printf("Vazia\n");
+    } else {
+        struct Torcedor *aux = f->ini;
+        while (aux != NULL) {
+            printf("[Cod: %d | Idade: %d | Cadeira: %d]\n", aux->cod, aux->idade, aux->cadeira);
+            aux = aux->prox;
+        }
+    }
+}
+
+void novo_velho(struct Fila *f) {
+    if (vazia(f) == 1) {
+        printf("Vazia\n");
+    } else {
+        struct Torcedor *aux = f->ini;
+        int menor = f->ini->idade;
+        int maior = f->ini->idade;
+        while (aux != NULL) {
+            if (aux->idade < menor) menor = aux->idade;
+            if (aux->idade > maior) maior = aux->idade;
+            aux = aux->prox;
+        }
+        printf("Mais novo: %d anos\n", menor);
+        printf("Mais velho: %d anos\n", maior);
+    }
+}
+
+void somar_valor(struct Fila *f) {
+    float total = 0;
+    struct Torcedor *aux = f->ini;
+    while (aux != NULL) {
+        total = total + aux->valor;
+        aux = aux->prox;
+    }
+    printf("Soma total dos ingressos: %.2f\n", total);
+}
+
+void menu(struct Fila *f) {
+    int opc;
+    do {
+        printf("\n1-Adicionar Torcedor\n2-Permitir Entrada\n3-Contar Fila\n4-Exibir Todos\n5-Novo e Velho\n6-Somar Valores\n9-Sair\nOpcao: ");
+        scanf("%d", &opc);
+        if (opc == 1) enfileirar(f);
+        else if (opc == 2) desenfileirar(f);
+        else if (opc == 3) contar(f);
+        else if (opc == 4) exibir(f);
+        else if (opc == 5) novo_velho(f);
+        else if (opc == 6) somar_valor(f);
+    } while (opc != 9);
+}
+
+int main() {
+    struct Fila f1;
+    criar(&f1);
+    menu(&f1);
+    return 0;
+}
