@@ -1,0 +1,210 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define MAX 70000
+
+unsigned long long lista[MAX];
+int qtd = 0;
+
+// ===================== CARREGAR =====================
+int carregar(unsigned long long codigos[MAX]) {
+    FILE *fp;
+    char nomeArquivo[100];
+    int i = 0;
+
+    printf("Digite o nome do arquivo: ");
+    scanf("%99s", nomeArquivo);
+
+    fp = fopen(nomeArquivo, "r");
+    if (fp == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return 0;
+    }
+
+    while (i < MAX && fscanf(fp, "%llu", &codigos[i]) == 1) {
+        i++;
+    }
+
+    fclose(fp);
+
+    printf("%d codigos carregados.\n", i);
+    return i;
+}
+
+// ===================== EXIBIR =====================
+void exibir(unsigned long long codigos[MAX], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("%d: %013llu\n", i + 1, codigos[i]);
+    }
+}
+
+// ===================== COPIAR =====================
+void copiar(unsigned long long origem[], unsigned long long destino[], int n) {
+    for (int i = 0; i < n; i++) {
+        destino[i] = origem[i];
+    }
+}
+
+// ===================== BUBBLE =====================
+void bubble(unsigned long long v[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (v[j] > v[j + 1]) {
+                unsigned long long t = v[j];
+                v[j] = v[j + 1];
+                v[j + 1] = t;
+            }
+        }
+    }
+}
+
+// ===================== INSERTION =====================
+void insertion(unsigned long long v[], int n) {
+    for (int i = 1; i < n; i++) {
+        unsigned long long chave = v[i];
+        int j = i - 1;
+
+        while (j >= 0 && v[j] > chave) {
+            v[j + 1] = v[j];
+            j--;
+        }
+        v[j + 1] = chave;
+    }
+}
+
+// ===================== SELECTION =====================
+void selection(unsigned long long v[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        int min = i;
+        for (int j = i + 1; j < n; j++) {
+            if (v[j] < v[min]) min = j;
+        }
+        unsigned long long t = v[i];
+        v[i] = v[min];
+        v[min] = t;
+    }
+}
+
+// ===================== SHELL =====================
+void shell(unsigned long long v[], int n) {
+    for (int gap = n / 2; gap > 0; gap /= 2) {
+        for (int i = gap; i < n; i++) {
+            unsigned long long temp = v[i];
+            int j;
+            for (j = i; j >= gap && v[j - gap] > temp; j -= gap) {
+                v[j] = v[j - gap];
+            }
+            v[j] = temp;
+        }
+    }
+}
+
+// ===================== QUICK =====================
+void quick(unsigned long long v[], int inicio, int fim) {
+    int i = inicio, j = fim;
+    unsigned long long pivo = v[(inicio + fim) / 2];
+
+    while (i <= j) {
+        while (v[i] < pivo) i++;
+        while (v[j] > pivo) j--;
+
+        if (i <= j) {
+            unsigned long long t = v[i];
+            v[i] = v[j];
+            v[j] = t;
+            i++;
+            j--;
+        }
+    }
+
+    if (inicio < j) quick(v, inicio, j);
+    if (i < fim) quick(v, i, fim);
+}
+
+// ===================== TEMPO =====================
+double medir(void (*func)(unsigned long long[], int), unsigned long long original[], int n) {
+    unsigned long long copia[MAX];
+    copiar(original, copia, n);
+
+    clock_t ini = clock();
+    func(copia, n);
+    clock_t fim = clock();
+
+    return (double)(fim - ini) / CLOCKS_PER_SEC;
+}
+
+// wrapper pro quick
+void quickWrapper(unsigned long long v[], int n) {
+    quick(v, 0, n - 1);
+}
+
+// ===================== MENU =====================
+void menu() {
+    int op;
+
+    double tempos[6];
+
+    do {
+        printf("\n:: ORDENACOES ::\n");
+        printf("0-Carregar\n1-Exibir\n3-Bubble\n5-Insertion\n7-Selection\n8-Shell\n9-Quick\n10-Tempos\n11-Melhor/Pior\n19-Sair\n");
+        scanf("%d", &op);
+
+        switch (op) {
+            case 0:
+                qtd = carregar(lista);
+                break;
+
+            case 1:
+                exibir(lista, qtd);
+                break;
+
+            case 3:
+                tempos[0] = medir(bubble, lista, qtd);
+                printf("Bubble: %f\n", tempos[0]);
+                break;
+
+            case 5:
+                tempos[1] = medir(insertion, lista, qtd);
+                printf("Insertion: %f\n", tempos[1]);
+                break;
+
+            case 7:
+                tempos[2] = medir(selection, lista, qtd);
+                printf("Selection: %f\n", tempos[2]);
+                break;
+
+            case 8:
+                tempos[3] = medir(shell, lista, qtd);
+                printf("Shell: %f\n", tempos[3]);
+                break;
+
+            case 9:
+                tempos[4] = medir(quickWrapper, lista, qtd);
+                printf("Quick: %f\n", tempos[4]);
+                break;
+
+            case 10:
+                for (int i = 0; i < 5; i++)
+                    printf("Alg %d: %f s\n", i, tempos[i]);
+                break;
+
+            case 11: {
+                int melhor = 0, pior = 0;
+                for (int i = 1; i < 5; i++) {
+                    if (tempos[i] < tempos[melhor]) melhor = i;
+                    if (tempos[i] > tempos[pior]) pior = i;
+                }
+                printf("Melhor: %d\nPior: %d\n", melhor, pior);
+                break;
+            }
+        }
+
+    } while (op != 19);
+}
+
+// ===================== MAIN =====================
+int main() {
+    menu();
+    return 0;
+}
